@@ -1,5 +1,5 @@
 /* Common Estimation Styles */
-li button {
+li .estButton {
     font-size: 1.25rem;
     background-color: rgba(211, 211, 211, 0.211);
     margin: 0px;
@@ -125,17 +125,6 @@ header>a {
 }
 
 /* Styles For the Current Queue */
-#currentDelete {
-    background-color: white;
-    border: 4px navy solid; 
-    color: navy;
-    padding: 5px, 5px;
-    border-radius: 4px;
-    font-size: 18px;
-    margin-left: 20px;
-    margin-top: -5px;
-}
-
 #root > #currentQueue {
     position: relative;
     grid-row: 2;
@@ -280,7 +269,31 @@ h2 {
     box-shadow: rgba(0, 0, 128, 0.25) 2px 2px 5px;
     border-radius: 10px;
 }
-
+.liStory, #currentDelete {
+    background-color: transparent;
+    border: none;
+}
+.deleteParent {
+    position: relative;
+    width: calc(100%);
+}
+li svg, h4 svg {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    fill: none;
+    padding: 10px;
+    margin-right: 5px;
+    
+}
+li:hover svg, h4:hover svg {
+    fill: #dc3545;
+}
+li:hover svg:hover, h4:hover svg:hover {
+    border: #dc3545 solid 1px;
+}
 #storyButton {
     z-index: 999;
     background-color: white;
@@ -292,27 +305,26 @@ h2 {
     font-size: 30px;
     position: fixed;
     bottom: 120px;
-    left: 45px;
+    left: 40px;
 }
 
-#liStory {
+/* .liStory {
     z-index: 999;
     background-color: white;
     border: 4px navy solid; 
     color: navy;
     padding: 100px, 80px;
     border-radius: 4px;
-    /* text-align: center; */
     font-size: 30px;
     position: fixed;
     bottom: 50px;
     left: 65px; 
-}
+} */
 
-#storyButton:hover, #liStory:hover, #currentDelete:hover {
+#storyButton:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
-#storyButton:active, #liStory:active, #currentDelete:active {
+#storyButton:active {
     transform: translateY(4px);
 }
 
@@ -451,9 +463,9 @@ header>a:hover,
     }
     #storyButton {
         bottom: 50px;
-        left: 30px;
+        left: 80px;
     }
-    #liStory {
+    .liStory {
         left: 185px;
     }
     #currentQueue>div>h4 {
@@ -491,10 +503,10 @@ header>a:hover,
     } */
     }
     #storyButton {
-        left: 50px;
+        left: 120px;
     }
 
-    #liStory {
+    .liStory {
         left: 245px;
     }
     #currentQueue>div>h4 {
