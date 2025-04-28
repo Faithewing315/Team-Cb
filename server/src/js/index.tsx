@@ -30,7 +30,13 @@ const App = () => { // displays page based on functions and url
 			const messageType = messageParts[0];
 			switch (messageType) {
 				case "connected":
-					setUid(messageParts[1]);
+					const storedUID = localStorage.getItem("UID")
+					if (storedUID == null) {
+						setUid("Unspecified");
+					} else {
+						setUid(storedUID);
+					}
+					// console.log("Testing");
 					break;
 				case "update":
 					setClickUid(messageParts[1]);

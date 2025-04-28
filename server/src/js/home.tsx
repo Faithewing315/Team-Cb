@@ -27,6 +27,7 @@ const Form = (props: { type: string; }) => { // type is either create or join
     let navigate = useNavigate();
     let action: string;
     let nameField: string;
+    let UID: string;
     let buttonText: string;
 
     if (props.type == "join") {
@@ -40,13 +41,16 @@ const Form = (props: { type: string; }) => { // type is either create or join
     } else {
         return null;
     }
-    let actionEvent = () => {
-        navigate(action)
-    }
+    
     return (
-        <form onSubmit={actionEvent} >
+        <form onSubmit={(event) => {
+            // event.preventDefault(); // Testing method to prevent page refresh on submit
+            localStorage.setItem("UID", UID);
+            console.log(localStorage.getItem("UID"));
+            navigate(action);
+        }}>
             <label htmlFor="name">{nameField}</label>
-            <input type="text" id="name" name="name" required /><br /><br />
+            <input type="text" id="name" name="name" onChange={event => {UID = event.target.value}}required/><br /><br />
             <label htmlFor="roomnum">Room ID:</label>
             <input type="text" id="roomnum" name="roomnum" required /><br /><br />
             <button type="submit">{buttonText}</button>

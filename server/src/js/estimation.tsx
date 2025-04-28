@@ -24,7 +24,7 @@ const Estimation = () => { // returns Estimation page
     return (<>
         <header>
             <h1>Got Scrum?</h1>
-            <h5><strong>Team CB's Room<br />ID: 12345</strong></h5>
+            <h5><strong>Got Scrum?<br />{localStorage.getItem("UID")}</strong></h5>
             <NavLink to={"/"}>Leave</NavLink>
         </header>
         <CurrentQueue storyQueue={storyQueue} cards={cards} />
