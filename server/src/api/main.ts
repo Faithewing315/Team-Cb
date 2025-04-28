@@ -21,35 +21,49 @@ const wsServer = new WebSocket.Server({ port: WSPort }, () => {
 class User {
     private uid: string;
     private hasVoted: boolean;
+    private voteValue: number;
 
-    constructor(newID: string, hasVoted: boolean) {
+    constructor(newID: string) {
         this.uid = newID;
         this.hasVoted = false;
+        this.voteValue = -1;
     }
 
-    public setVote(hasVoted: boolean) {
+    public getUID() {
+        return this.uid;
+    }
+
+    public setHasVoted(hasVoted: boolean) {
         this.hasVoted = hasVoted;
     } 
 
-    public getVote() {
+    public getHasVoted() {
         return this.hasVoted;
+    }
+
+    public setVoteValue(voteValue: number) {
+        this.voteValue = voteValue;
+    } 
+
+    public getVoteValue() {
+        return this.voteValue;
     }
 }
 
 
 let users: User[];
 
-const Voted = () => {
+const voted = () => {
     let hasEveryoneVoted = true;
 
     users.forEach((person) => {
         if (hasEveryoneVoted) {
-            hasEveryoneVoted = person.getVote();
+            hasEveryoneVoted = person.getHasVoted();
         }
     })
 
     if(hasEveryoneVoted) {
-        
+        console.log("Everyone voted!")
     }
 }
 
@@ -70,7 +84,12 @@ wsServer.on("connection", (socket: WebSocket) => {
                 console.log(uid);
                 console.log(voteValue);
                 // update user's status to have voted and thier vote number
-                // voted();
+                users.forEach(user => {
+                    if (user.getUID() === uid) {
+                        user.setVoteValue(parseInt(voteValue));
+                    }
+                });
+                voted();
                 break;
             case "allClick":
                 //if everyone clicked the same card then that value should be returned to all users
