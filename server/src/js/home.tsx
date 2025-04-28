@@ -1,10 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "../../../client/dist/css/index.css";
-const JoinRoom = () => { // index.html
+const JoinRoom = (props: { sendMessage: any }) => { // index.html
+    let sendMessage = props.sendMessage;
     return (<>
         <div className="index">
             <h1>Got Scrum?</h1>
-            <Form type="join" />
+            <Form sendMessage={sendMessage} type="join" />
             <footer>
                 <p>Create your own room for free here: <NavLink to={"/create-room"}>Create New Room</NavLink></p> 
             </footer>
@@ -12,23 +13,25 @@ const JoinRoom = () => { // index.html
         </div>
     </>);
 }
-const CreateRoom = () => { // create room page
+const CreateRoom = (props: { sendMessage: any }) => { // create room page
+    let sendMessage = props.sendMessage;
     return (<>
         <div className="index">
             <h1>Create Room</h1>
-            <Form type="create" />
+            <Form sendMessage={sendMessage} type="create" />
             <footer>
                 <p>Join a room for free here: <NavLink to={"/"}>Join Room</NavLink></p>
             </footer>
         </div>
     </>)
 }
-const Form = (props: { type: string; }) => { // type is either create or join
+const Form = (props: { sendMessage: any, type: string; }) => { // type is either create or join
     let navigate = useNavigate();
     let action: string;
     let nameField: string;
     let UID: string;
     let buttonText: string;
+    let sendMessage = props.sendMessage;
 
     if (props.type == "join") {
         action = "/estimate";
@@ -47,6 +50,7 @@ const Form = (props: { type: string; }) => { // type is either create or join
             // event.preventDefault(); // Testing method to prevent page refresh on submit
             localStorage.setItem("UID", UID);
             console.log(localStorage.getItem("UID"));
+            sendMessage(`addUser_${UID}`)
             navigate(action);
         }}>
             <label htmlFor="name">{nameField}</label>

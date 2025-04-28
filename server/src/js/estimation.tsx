@@ -20,20 +20,21 @@ const fetch = axios.create({
     timeout: 30000 // timeout in ms for http requests
 });
 
-const Estimation = () => { // returns Estimation page
+const Estimation = (props: { sendMessage: any} ) => { // returns Estimation page
+    let sendMessage = props.sendMessage;
     return (<>
         <header>
             <h1>Got Scrum?</h1>
             <h5><strong>Got Scrum?<br />{localStorage.getItem("UID")}</strong></h5>
             <NavLink to={"/"}>Leave</NavLink>
         </header>
-        <CurrentQueue storyQueue={storyQueue} cards={cards} />
+        <CurrentQueue sendMessage={sendMessage} storyQueue={storyQueue} cards={cards} />
         <StQueue storyQueue={storyQueue} />
         <Estimations estimations={estimations} />
         <div id="bottomLine"></div>
     </>)
 }
-const CurrentQueue = (props: { storyQueue: UserStoryQueue; cards: Cards }) => { // returns middle section of Estimation page
+const CurrentQueue = (props: { sendMessage: any, storyQueue: UserStoryQueue; cards: Cards }) => { // returns middle section of Estimation page
     const [currentCards, setCards] = React.useState(props.cards);
     useEffect(() => { // gets estimated stories
         fetch.get("cards").then((response) => {
@@ -48,13 +49,14 @@ const CurrentQueue = (props: { storyQueue: UserStoryQueue; cards: Cards }) => { 
     let avg: number;
     let total = 0;
     let cardsList = cards.getCards();
+    let sendMessage = props.sendMessage;
     cardsList.sort(function (a: any, b: any) { return a.cardValue - b.cardValue })
     const ListCards = () => { // returns Estimation card buttons
         return (
             <>
                 {cardsList.map((card, i) => (
 
-                    <EstimationButton key={i} card={card} />
+                    <EstimationButton sendMessage={sendMessage} key={i} card={card} />
                 ))}
             </>
         );
@@ -197,10 +199,12 @@ const Estimations = (props: { estimations: UserStoryQueue }) => { // returns alr
         </aside>
     )
 }
-const EstimationButton = (props: { card: Card }) => { // returns a single estimation card button
+const EstimationButton = (props: { sendMessage: any, card: Card }) => { // returns a single estimation card button
+    let sendMessage = props.sendMessage;
     const submit = () => {
         //change to websocket send message
         fetch.post("estimations", { value: props.card.getValue() }); // Convert to intermediary WebSocket call
+        sendMessage(`voted_${localStorage.getItem("UID")}_${props.card.getValue()}`);
     }
     return (
         <li><button className="estButton" onClick={submit} value={props.card.getValue()}>{props.card.getValue()}</button></li>

@@ -12,11 +12,47 @@ const app: Express = express();
 //WebSocket server
 const WSPort = 3030;
 const RESTfulPort = 8080;
-const users: any = { };
 
 const wsServer = new WebSocket.Server({ port: WSPort }, () => {
     console.log("This sever is servething! Huzzah!");
 });
+
+
+class User {
+    private uid: string;
+    private hasVoted: boolean;
+
+    constructor(newID: string, hasVoted: boolean) {
+        this.uid = newID;
+        this.hasVoted = false;
+    }
+
+    public setVote(hasVoted: boolean) {
+        this.hasVoted = hasVoted;
+    } 
+
+    public getVote() {
+        return this.hasVoted;
+    }
+}
+
+
+let users: User[];
+
+const Voted = () => {
+    let hasEveryoneVoted = true;
+
+    users.forEach((person) => {
+        if (hasEveryoneVoted) {
+            hasEveryoneVoted = person.getVote();
+        }
+    })
+
+    if(hasEveryoneVoted) {
+        
+    }
+}
+
 
 // Observer Pattern
 wsServer.on("connection", (socket: WebSocket) => {
@@ -28,11 +64,13 @@ wsServer.on("connection", (socket: WebSocket) => {
 
         const messageType = messageParts[0];
         switch(messageType) {
-            case "click":
+            case "voted":
                 const uid = messageParts[1];
-                wsServer.clients.forEach((inClient: WebSocket) => {
-                    inClient.send(`update_${uid}`);
-                });
+                const voteValue = messageParts[2];
+                console.log(uid);
+                console.log(voteValue);
+                // update user's status to have voted and thier vote number
+                // voted();
                 break;
             case "allClick":
                 //if everyone clicked the same card then that value should be returned to all users
@@ -53,6 +91,11 @@ wsServer.on("connection", (socket: WebSocket) => {
     // Send message to client through socket
     socket.send(message);
 });
+
+
+
+
+
 
 let storyCount = 0;
 app.use(express.json());
