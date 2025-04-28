@@ -78,6 +78,17 @@ wsServer.on("connection", (socket: WebSocket) => {
                     inClient.send(`estimated_${uid}`);
                 });
                 break;
+                case "addUser":
+                //checks who the user is and if they input a name, adds them to the array
+                  
+                User.forEach(( => {
+                    if (!uid[User]) {
+                        User.push(uid);
+                    } else {
+                        
+                    }
+                });
+                break;
         }
     })
     
