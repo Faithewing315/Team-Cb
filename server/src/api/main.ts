@@ -51,7 +51,7 @@ class User {
 }
 
 
-let users: User[];
+let users: User[] = new Array();
 
 const voted = () => {
     let hasEveryoneVoted = true;
@@ -76,10 +76,12 @@ wsServer.on("connection", (socket: WebSocket) => {
         console.log(`Message received: ${inMessage}`);
         const messageParts: string[] = String(inMessage).split("_");
 
+        const uid = messageParts[1];
+
         const messageType = messageParts[0];
         switch(messageType) {
             case "voted":
-                const uid = messageParts[1];
+                
                 const voteValue = messageParts[2];
                 console.log(uid);
                 console.log(voteValue);
@@ -97,29 +99,51 @@ wsServer.on("connection", (socket: WebSocket) => {
                     inClient.send(`estimated_${uid}`);
                 });
                 break;
-                case "addUser":
+            case "addUser":
                 //checks who the user is and if they input a name, adds them to the array
-                  
-                User.forEach(( => {
-                    if (!uid[User]) {
-                        User.push(uid);
-                    } else {
-                        
+                let userExists = false;
+                users.forEach((user) => { //user is the user it is on in the for each
+                    const element = user;
+                    if (user.getUID() == uid) {
+                        userExists = true;
                     }
+                })
+                if (!userExists) {
+                    users.push(new User(uid)); //adds the new user to the array
+                    wsServer.clients.forEach((client: WebSocket) => {
+                        client.send(`add-user_${uid}`);
+                    });
+                }   
+                break;
+            case "close":
+                //removes user
+                users.forEach((user, i) => {
+                    if (user.getUID() == uid) {
+                        users.splice(i, 1)
+                    }
+                })
+                wsServer.clients.forEach((client: WebSocket) => {
+                    client.send(`remove-user_${uid}`);
                 });
                 break;
         }
     })
+
+    users.forEach((user, i) => {
+        wsServer.clients.forEach((client: WebSocket) => {
+            client.send(`add-user_${user.getUID()}`);
+        });
+    })
     
     // Create unique identifier to the client
-    const uid: string = `uid${new Date().getTime()}`;
+    // const uid: string = `uid${new Date().getTime()}`;
 
     // construct connection message and return generated pid
-    const message = `connected_${uid}`;
-    console.log(message);
+    // const message = `connected_${uid}`;
+    // console.log(message);
     
     // Send message to client through socket
-    socket.send(message);
+    // socket.send(message);
 });
 
 
